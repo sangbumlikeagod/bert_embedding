@@ -25,7 +25,7 @@ class WordEmbeddingBase:
 
     def __add__(self, other):
         newTensor = torch.add(self.embedding, other.embedding)
-
+        newTensor = torch.nn.functional.layer_norm(newTensor, newTensor.shape)
         return self.__class__(
             tensor=newTensor
         )
@@ -33,6 +33,7 @@ class WordEmbeddingBase:
 
     def __sub__(self, other):
         newTensor = torch.add(self.embedding, torch.neg(other.embedding))
+        newTensor = torch.nn.functional.layer_norm(newTensor, newTensor.shape)
         return self.__class__(
             tensor=newTensor
         )
@@ -64,8 +65,6 @@ class WordEmbedding(WordEmbeddingBase):
         super().__init__()
         self._word = word
         self._embedding = tensor
-
-
         if word:
             assert self.initialize_word()
         else:
